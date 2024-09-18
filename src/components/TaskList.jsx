@@ -9,19 +9,21 @@ const TaskList = () => {
     const [type, setType] = useState('cleaning');
     const [isEditing, setIsEditing] = useState(false);
     const [currentTask, setCurrentTask] = useState(null);
+    const [isBreakable, setIsBreakable] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (isEditing) {
-            editTask(currentTask.id, { ...currentTask, title, duration, priority, type });
+            editTask(currentTask.id, { ...currentTask, title, duration, priority, type, isBreakable });
             setIsEditing(false);
             setCurrentTask(null);
         } else {
-            addTask(title, duration, priority, type);
+            addTask(title, duration, priority, type, isBreakable);
         }
         setTitle('');
         setDuration('');
         setPriority('');
+        setIsBreakable(false);
     };
 
     const handleEditClick = (task) => {
@@ -31,6 +33,7 @@ const TaskList = () => {
         setDuration(task.duration);
         setPriority(task.priority);
         setType(task.type);
+        setIsBreakable(task.isBreakable);
     };
 
     const weekSchedule = [
@@ -48,12 +51,17 @@ const TaskList = () => {
     const sortedTasks = tasks.sort((a, b) => b.priority - a.priority);
 
     sortedTasks.forEach(task => {
+        let taskDuration = task.duration / 60;
         for (let i = 0; i < weekSchedule.length; i++) {
-            const taskDuration = task.duration / 60;
             if (weekSchedule[i].availableHours >= taskDuration) {
                 weekSchedule[i].tasks.push(task);
                 weekSchedule[i].availableHours -= taskDuration;
                 break;
+            } else if (task.isBreakable && weekSchedule[i].availableHours > 0) {
+                const allocatedHours = weekSchedule[i].availableHours;
+                weekSchedule[i].tasks.push({ ...task, duration: allocatedHours * 60 });
+                weekSchedule[i].availableHours = 0;
+                taskDuration -= allocatedHours;
             }
         }
     });
@@ -87,12 +95,20 @@ const TaskList = () => {
                     <option value="cleaning">Cleaning</option>
                     <option value="goal-setting">Goal-Setting</option>
                 </select>
+                <label>
+                    <input 
+                        type="checkbox"
+                        checked={isBreakable}
+                        onChange={(e) => setIsBreakable(e.target.checked)}
+                    />
+                    Breakable
+                </label>
                 <button type="submit">{isEditing ? 'Update Task' : 'Add Task'}</button>
             </form>
             <ul>
                 {tasks.map((task) => (
                     <li key={task.id}>
-                        {task.title} ({task.duration} min, Priority: {task.priority}, {task.type})
+                        {task.title} ({task.duration} min, Priority: {task.priority}, {task.type}, Breakable: {task.isBreakable ? 'Yes' : 'No'})
                         <button onClick={() => handleEditClick(task)}>Edit</button>
                         <button onClick={() => removeTask(task.id)}>Remove</button>
                     </li>
