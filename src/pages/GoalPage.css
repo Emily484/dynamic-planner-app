@@ -1,0 +1,65 @@
+/* dynamic-planner-app/src/pages/GoalPage.css */
+.goal-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.goal-page h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.goal-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.goal-page form input,
+.goal-page form select,
+.goal-page form button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.goal-page form button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.goal-page form button:hover {
+    background-color: #45a049;
+}
+
+.goal-page ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.goal-page ul li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.goal-page ul li button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.goal-page ul li button:hover {
+    background-color: #d32f2f;
+}
